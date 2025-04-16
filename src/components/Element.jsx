@@ -1,9 +1,15 @@
-import React from 'react'
+import React from "react";
 
-function Element({className, children}) {
+function Element({ className, children, onClick }) {
   return (
-    <div className={className}>{children}</div>
-  )
+    <div
+      className={className}
+      onClick={onClick}
+      style={{ cursor: onClick ? "pointer" : "default" }}
+    >
+      {children}
+    </div>
+  );
 }
 
-export default Element
+export default Element;
