@@ -64,3 +64,34 @@ body {
   color: white;
   font-weight: bold;
 }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  max-width: 1000px;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  margin: 0;
+}
+
+.header button {
+  padding: 10px 15px;
+  font-weight: bold;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.main-content {
+  display: flex;
+  gap: 20px;
+  width: 90%;
+  max-width: 1000px;
+  justify-content: space-between;
+}
+

@@ -1,80 +1,68 @@
 import { useState } from "react";
 import "./App.css";
-import Element from "./components/Element";
-import {
-  startOfMonth,
-  endOfMonth,
-  differenceInDays,
-  addMonths,
-  subMonths,
-  startOfYear,
-  endOfYear,
-} from "date-fns";
+import Calendar from "./components/Calendar";
+import AddEventForm from "./components/AddEventForm";
+import TodoList from "./components/TodoList";
 
 function App() {
   const [currentDay, setCurrentDay] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [events, setEvents] = useState({});
+  const [showForm, setShowForm] = useState(false);
 
-  const startDate = startOfMonth(currentDay);
-  const endDate = endOfMonth(currentDay);
-  const numDays = differenceInDays(endDate, startDate) + 1;
-  const prefixDays = startDate.getDay();
-  const suffixDays = 6 - endDate.getDay();
+  const handleSaveEvent = (newEvent) => {
+    const dateKey = newEvent.date;
 
-  const daysOfWeek = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
-  const monthYear = currentDay.toLocaleString("default", {
-    month: "long",
-    year: "numeric",
-  });
+    setEvents((prevEvents) => {
+      const updatedEvents = prevEvents[dateKey]
+        ? [...prevEvents[dateKey], newEvent]
+        : [newEvent];
+      return { ...prevEvents, [dateKey]: updatedEvents };
+    });
 
-  const goToPreviousMonth = () => setCurrentDay((prev) => subMonths(prev, 1));
-  const goToNextMonth = () => setCurrentDay((prev) => addMonths(prev, 1));
-  const goToPreviousYear = () => setCurrentDay((prev) => subMonths(prev, 12));
-  const goToNextYear = () => setCurrentDay((prev) => addMonths(prev, 12));
+    // 🔥 Update selectedDate to match the form-chosen date
+    setSelectedDate(new Date(dateKey));
+  };
+
+  const handleToggleComplete = (dateKey, item) => {
+    setEvents((prev) => {
+      const updated = prev[dateKey].map((ev) =>
+        ev === item ? { ...ev, completed: true } : ev
+      );
+      return { ...prev, [dateKey]: updated };
+    });
+  };
 
   return (
     <div className="App">
-      <div>My REACT Calendar</div>
-
-      <div className="calendar">
-        <Element onClick={goToPreviousYear}>{"<<"}</Element>
-        <Element onClick={goToPreviousMonth}>{"<"}</Element>
-        <Element className="month">{monthYear}</Element>
-        <Element onClick={goToNextMonth}>{">"}</Element>
-        <Element onClick={goToNextYear}>{">>"}</Element>
-
-        {daysOfWeek.map((day, idx) => (
-          <Element className="dayCell" key={`dow-${idx}`}>
-            {day}
-          </Element>
-        ))}
-
-        {Array.from({ length: prefixDays }).map((_, i) => (
-          <Element className="dayCell" key={`pre-${i}`} />
-        ))}
-
-        {Array.from({ length: numDays }).map((_, i) => {
-          const date = i + 1;
-          const isToday =
-            new Date().toDateString() ===
-            new Date(
-              currentDay.getFullYear(),
-              currentDay.getMonth(),
-              date
-            ).toDateString();
-          return (
-            <Element
-              className={`dayCell ${isToday ? "today" : ""}`}
-              key={`date-${date}`}
-            >
-              {date}
-            </Element>
-          );
-        })}
-
-        {Array.from({ length: suffixDays }).map((_, i) => (
-          <Element className="dayCell" key={`suf-${i}`} />
-        ))}
+      <div className="header">
+        <h1>📆 My React Calendar + Todo</h1>
+        <button onClick={() => setShowForm(true)}>Add Event</button>
       </div>
+
+      <div className="main-content">
+        <Calendar
+          currentDay={currentDay}
+          setCurrentDay={setCurrentDay}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          events={events}
+        />
+
+        <TodoList
+          selectedDate={selectedDate}
+          events={events}
+          onToggleComplete={handleToggleComplete}
+        />
+      </div>
+
+      {showForm && (
+        <AddEventForm
+          selectedDate={selectedDate}
+          onClose={() => setShowForm(false)}
+          onSave={handleSaveEvent}
+        />
+      )}
     </div>
   );
 }
