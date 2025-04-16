@@ -30,15 +30,12 @@ function TodoList({ selectedDate, events, onToggleComplete }) {
       ) : (
         <ul>
           {todos.map((item, idx) => (
-            <li
-              key={idx}
-              className={`${item.completed ? "done" : "new-item"}`}
-              onClick={() => handleCheckboxClick(item)}
-            >
+            <li key={idx} className={`${item.completed ? "done" : "new-item"}`}>
               <input
                 type="checkbox"
                 checked={item.completed}
                 disabled={item.completed}
+                onChange={() => handleCheckboxClick(item)}
               />
               <div className="info">
                 <strong>
