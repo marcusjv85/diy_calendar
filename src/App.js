@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import Calendar from "./components/Calendar";
 import AddEventForm from "./components/AddEventForm";
-import logo from "./planr.png"; // make sure the path is correct
+import logo from "./plogo.png"; // make sure the path is correct
 import TodoList from "./components/TodoList";
 
 function App() {
@@ -37,10 +37,15 @@ function App() {
   return (
     <div className="App">
       <div className="header">
-        <div className="logo">
-          <img src={logo} alt="Planr logo" />
+        <img src={logo} alt="Planr logo" className="header-logo" />
+        <div className="header-left">
+          {/* <div className="header-title">
+            <span role="img" aria-label="calendar">
+              📅
+            </span>
+            My Calendar
+          </div> */}
         </div>
-        <h1>📆 My React Calendar + Todo</h1>
         <button onClick={() => setShowForm(true)}>Add Event</button>
       </div>
 
